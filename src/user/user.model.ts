@@ -15,6 +15,12 @@ export class User {
   password: string;
 
   @Field()
+  fcmToken: string;
+
+  @Field()
+  phoneNumber: string;
+
+  @Field()
   createdAt: Date;
 
   @Field()

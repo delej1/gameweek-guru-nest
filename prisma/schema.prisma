@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -14,10 +8,93 @@ datasource db {
 }
 
 model User {
-  id                  Int      @id @default(autoincrement()) // SERIAL equivalent in Prisma
-  username            String   @db.VarChar(50)               // VARCHAR(50)
-  email               String   @unique @db.VarChar(100)      // Unique email, VARCHAR(100)
-  password            String   @db.VarChar(255)              // Hashed password, VARCHAR(255)
-  createdAt           DateTime @default(now())               // TIMESTAMP for account creation
-  updatedAt           DateTime @updatedAt                    // TIMESTAMP for last account update, auto-updates
+  id            Int            @id @default(autoincrement()) // Primary Key
+  username      String         @db.VarChar(50) // User's username
+  email         String         @unique @db.VarChar(100) // User's email
+  password      String         @db.VarChar(255) // Hashed password
+  phoneNumber   String         @db.VarChar(15) // User's phone number
+  fcmToken      String         @default("") @db.VarChar(255) // FCM token, default empty string
+  createdAt     DateTime       @default(now()) // Account creation timestamp
+  updatedAt     DateTime       @updatedAt // Last account update timestamp
+  subscriptions Subscription[] // One-to-many relationship with Subscriptions
+}
+
+model Subscription {
+  id        Int      @id @default(autoincrement()) // Primary Key
+  userId    Int // Foreign Key to User
+  user      User     @relation(fields: [userId], references: [id]) // User relation
+  planName  String   @db.VarChar(50) // Subscription plan name
+  status    String   @db.VarChar(20) // Subscription status (active, canceled)
+  startDate DateTime // Subscription start date
+  endDate   DateTime // Subscription end date
+}
+
+model Player {
+  id                       Int                @id @default(autoincrement()) // Primary Key
+  fpl_id                   Int // Player ID from the FPL API
+  name                     String             @db.VarChar(100) // Player's name
+  teamId                   Int // Foreign Key to Team
+  team                     Team               @relation(fields: [teamId], references: [id]) // Team relation
+  position                 Int // Player’s position (1 = GK, 2 = DEF)
+  totalPoints              Int // Total points scored in the season
+  form                     Decimal            @db.Decimal(5, 2) // Current form
+  minutes                  Int // Total minutes played
+  goalsScored              Int // Goals scored
+  assists                  Int // Assists
+  cleanSheets              Int // Clean sheets
+  ictIndex                 Decimal            @db.Decimal(5, 2) // ICT Index (Influence, Creativity, Threat)
+  status                   String             @db.VarChar(50) // Player availability status
+  chanceOfPlayingNextRound Int // Chance of playing next round (%)
+  predictions              PlayerPrediction[] // One-to-many relationship with PlayerPredictions
+}
+
+model Team {
+  id              Int       @id @default(autoincrement()) // Primary Key
+  fpl_id          Int // Team ID from the FPL API
+  name            String    @db.VarChar(100) // Team name
+  strengthAttack  Decimal   @db.Decimal(5, 2) // Team attacking strength
+  strengthDefense Decimal   @db.Decimal(5, 2) // Team defensive strength
+  strengthOverall Decimal   @db.Decimal(5, 2) // Overall team strength
+  players         Player[] // One-to-many relationship with Players
+  homeFixtures    Fixture[] @relation("HomeTeam")
+  awayFixtures    Fixture[] @relation("AwayTeam")
+}
+
+model Fixture {
+  id                Int                @id @default(autoincrement()) // Primary Key
+  fpl_id            Int // Fixture ID from the FPL API
+  gameweek          Int // Gameweek number
+  homeTeamId        Int // Foreign Key to Team (home)
+  awayTeamId        Int // Foreign Key to Team (away)
+  homeTeam          Team               @relation("HomeTeam", fields: [homeTeamId], references: [id]) // Home team relation
+  awayTeam          Team               @relation("AwayTeam", fields: [awayTeamId], references: [id]) // Away team relation
+  date              DateTime // Fixture date
+  difficultyHome    Int // Difficulty rating for the home team
+  difficultyAway    Int // Difficulty rating for the away team
+  matchPrediction   MatchPrediction? // One-to-one relationship with MatchPrediction
+  playerPredictions PlayerPrediction[] // One-to-many relationship with PlayerPredictions
+}
+
+model PlayerPrediction {
+  id                   Int      @id @default(autoincrement()) // Primary Key
+  playerId             Int // Foreign Key to Player
+  player               Player   @relation(fields: [playerId], references: [id]) // Player relation
+  fixtureId            Int // Foreign Key to Fixture
+  fixture              Fixture  @relation(fields: [fixtureId], references: [id]) // Fixture relation
+  predictedPoints      Decimal  @db.Decimal(5, 2) // AI-predicted points for the player
+  predictedGoals       Decimal  @db.Decimal(5, 2) // AI-predicted goals
+  predictedAssists     Decimal  @db.Decimal(5, 2) // AI-predicted assists
+  predictionConfidence Decimal  @db.Decimal(5, 2) // Confidence score for the prediction
+  createdAt            DateTime @default(now()) // Timestamp for when the prediction was made
+}
+
+model MatchPrediction {
+  id                Int      @id @default(autoincrement()) // Primary Key
+  fixtureId         Int      @unique // Foreign Key to Fixture
+  fixture           Fixture  @relation(fields: [fixtureId], references: [id]) // Fixture relation
+  predictedResult   String   @db.VarChar(10) // AI-predicted result (win, draw, lose)
+  confidenceHomeWin Decimal  @db.Decimal(5, 2) // Probability of a home win
+  confidenceAwayWin Decimal  @db.Decimal(5, 2) // Probability of an away win
+  confidenceDraw    Decimal  @db.Decimal(5, 2) // Probability of a draw
+  createdAt         DateTime @default(now()) // Timestamp for when the prediction was made
 }
