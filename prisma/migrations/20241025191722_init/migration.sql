@@ -121,6 +121,9 @@ CREATE UNIQUE INDEX "Teams_fpl_id_key" ON "Teams"("fpl_id");
 CREATE UNIQUE INDEX "Fixtures_fpl_id_key" ON "Fixtures"("fpl_id");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "PlayerPredictions_playerId_fixtureId_key" ON "PlayerPredictions"("playerId", "fixtureId");
+
+-- CreateIndex
 CREATE UNIQUE INDEX "MatchPredictions_fixtureId_key" ON "MatchPredictions"("fixtureId");
 
 -- AddForeignKey

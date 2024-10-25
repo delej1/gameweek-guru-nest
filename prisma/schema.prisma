@@ -95,6 +95,8 @@ model PlayerPredictions {
   predictionConfidence Decimal  @db.Decimal(5, 2) // Confidence score for the prediction
   aiReasoning          String   @db.Text // Store AI reasoning behind the prediction
   createdAt            DateTime @default(now()) // Timestamp for when the prediction was made
+
+  @@unique([playerId, fixtureId]) // This creates a compound unique constraint
 }
 
 model MatchPredictions {

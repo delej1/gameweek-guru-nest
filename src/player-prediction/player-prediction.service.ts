@@ -111,9 +111,22 @@ export class PlayerPredictionService {
           continue;
         }
 
-        // Upload validated data to the database
-        await this.prisma.playerPredictions.create({
-          data: {
+        // Use upsert to either create or update player prediction
+        await this.prisma.playerPredictions.upsert({
+          where: {
+            playerId_fixtureId: {
+              playerId: player.id,
+              fixtureId: fixture.id,
+            },
+          },
+          update: {
+            predictedPoints: validatedResponse.predictedPoints,
+            predictedGoals: validatedResponse.predictedGoals,
+            predictedAssists: validatedResponse.predictedAssists,
+            predictionConfidence: validatedResponse.predictionConfidence,
+            aiReasoning: validatedResponse.reasoning,
+          },
+          create: {
             playerId: player.id,
             fixtureId: fixture.id,
             predictedPoints: validatedResponse.predictedPoints,

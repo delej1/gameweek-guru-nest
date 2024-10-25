@@ -65,9 +65,18 @@ export class MatchPredictionService {
             continue;
           }
 
-          // Upload validated data to the database
-          await this.prisma.matchPredictions.create({
-            data: {
+          // Use upsert to avoid unique constraint errors
+          await this.prisma.matchPredictions.upsert({
+            where: { fixtureId: fixture.id },
+            update: {
+              confidenceHomeWin: validatedResponse.confidenceHomeWin,
+              confidenceAwayWin: validatedResponse.confidenceAwayWin,
+              confidenceDraw: validatedResponse.confidenceDraw,
+              predictedHomeGoals: validatedResponse.predictedHomeGoals,
+              predictedAwayGoals: validatedResponse.predictedAwayGoals,
+              aiReasoning: validatedResponse.reasoning,
+            },
+            create: {
               fixtureId: fixture.id,
               confidenceHomeWin: validatedResponse.confidenceHomeWin,
               confidenceAwayWin: validatedResponse.confidenceAwayWin,

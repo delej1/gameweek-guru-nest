@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ScheduleModule } from '@nestjs/schedule';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PrismaService } from './prisma/prisma.service';
@@ -13,10 +14,12 @@ import { MatchPredictionModule } from './match-prediction/match-prediction.modul
 import { FplModule } from './fpl/fpl.module';
 import { DataPopulationModule } from './data-population/data-population.module';
 import { AnthropicModule } from './anthropic/anthropic.module';
+import { PredictionCronService } from './cron/prediction-cron.service';
 
 
 @Module({
   imports: [
+    ScheduleModule.forRoot(),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
@@ -32,7 +35,10 @@ import { AnthropicModule } from './anthropic/anthropic.module';
     DataPopulationModule,
     AnthropicModule,
   ],
-  providers: [PrismaService],
+  providers: [
+    PrismaService, 
+    PredictionCronService,
+  ],
 })
 
 export class AppModule {}

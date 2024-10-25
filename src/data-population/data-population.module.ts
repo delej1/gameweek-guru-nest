@@ -8,6 +8,7 @@ import { MatchPredictionModule } from '../match-prediction/match-prediction.modu
 
 @Module({
   imports: [PrismaModule, FplModule, PlayerPredictionModule, MatchPredictionModule],
-  providers: [DataPopulationService, DataPopulationResolver]
+  providers: [DataPopulationService, DataPopulationResolver],
+  exports: [DataPopulationService],
 })
 export class DataPopulationModule {}
