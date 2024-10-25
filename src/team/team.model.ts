@@ -21,6 +21,9 @@ export class Team {
   @Field(() => Float)
   strengthOverall: number;
 
+  @Field(() => Int)
+  code: number;
+
   @Field(() => [Player])
   players: Player[];
 }

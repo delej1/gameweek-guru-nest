@@ -26,4 +26,7 @@ export class Fixture {
 
   @Field(() => Int)
   difficultyAway: number;
+
+  @Field(() => Boolean)
+  finished: boolean;
 }

@@ -68,6 +68,7 @@ CREATE TABLE "Fixtures" (
     "id" SERIAL NOT NULL,
     "fpl_id" INTEGER NOT NULL,
     "gameweek" INTEGER NOT NULL,
+    "finished" BOOLEAN NOT NULL,
     "homeTeamId" INTEGER NOT NULL,
     "awayTeamId" INTEGER NOT NULL,
     "date" TIMESTAMP(3) NOT NULL,
@@ -118,12 +119,6 @@ CREATE UNIQUE INDEX "Teams_fpl_id_key" ON "Teams"("fpl_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Fixtures_fpl_id_key" ON "Fixtures"("fpl_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PlayerPredictions_playerId_key" ON "PlayerPredictions"("playerId");
-
--- CreateIndex
-CREATE UNIQUE INDEX "PlayerPredictions_fixtureId_key" ON "PlayerPredictions"("fixtureId");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "MatchPredictions_fixtureId_key" ON "MatchPredictions"("fixtureId");

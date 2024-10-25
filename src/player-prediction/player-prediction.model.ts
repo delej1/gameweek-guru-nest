@@ -25,6 +25,9 @@ export class PlayerPrediction {
   @Field(() => Float)
   predictionConfidence: number;
 
+  @Field(() => String)
+  aiReasoning: string;
+
   @Field()
   createdAt: Date;
 }

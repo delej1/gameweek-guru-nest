@@ -21,6 +21,15 @@ export class MatchPrediction {
   @Field(() => Float)
   confidenceDraw: number;
 
+  @Field(() => Float)
+  predictedHomeGoals: number;
+
+  @Field(() => Float)
+  predictedAwayGoals: number;
+
+  @Field()
+  aiReasoning: string;
+
   @Field()
   createdAt: Date;
 }

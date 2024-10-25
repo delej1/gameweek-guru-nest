@@ -18,8 +18,81 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Team {
+  id: Int!
+  fpl_id: Int!
+  name: String!
+  strengthAttack: Float!
+  strengthDefense: Float!
+  strengthOverall: Float!
+  code: Int!
+  players: [Player!]!
+}
+
+type Player {
+  id: Int!
+  fpl_id: Int!
+  name: String!
+  code: Int!
+  team: Team!
+  position: Int!
+  totalPoints: Int!
+  form: Float!
+  minutes: Int!
+  goalsScored: Int!
+  assists: Int!
+  cleanSheets: Int!
+  expectedGoals: Float!
+  expectedAssists: Float!
+  influence: Float!
+  creativity: Float!
+  threat: Float!
+  ictIndex: Float!
+  status: String!
+  chanceOfPlayingNextRound: Int!
+}
+
+type Fixture {
+  id: Int!
+  fpl_id: Int!
+  gameweek: Int!
+  homeTeam: Team!
+  awayTeam: Team!
+  date: DateTime!
+  difficultyHome: Int!
+  difficultyAway: Int!
+  finished: Boolean!
+}
+
+type PlayerPrediction {
+  id: Int!
+  player: Player!
+  fixture: Fixture!
+  predictedPoints: Float!
+  predictedGoals: Float!
+  predictedAssists: Float!
+  predictionConfidence: Float!
+  aiReasoning: String!
+  createdAt: DateTime!
+}
+
+type MatchPrediction {
+  id: Int!
+  fixture: Fixture!
+  predictedResult: String!
+  confidenceHomeWin: Float!
+  confidenceAwayWin: Float!
+  confidenceDraw: Float!
+  predictedHomeGoals: Float!
+  predictedAwayGoals: Float!
+  aiReasoning: String!
+  createdAt: DateTime!
+}
+
 type Query {
   users: [User!]!
+  getPlayerPredictionsForCurrentGameWeek: [PlayerPrediction!]!
+  getMatchPredictionsForCurrentGameWeek: [MatchPrediction!]!
 }
 
 type Mutation {

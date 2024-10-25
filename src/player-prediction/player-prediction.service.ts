@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AnthropicAiService } from '../anthropic/anthropic.service';
 import { FplDataService } from '../fpl/fpl.service';
+import { validatePlayerPredictionResponse } from '../helpers/prediction-validation';
 
 @Injectable()
 export class PlayerPredictionService {
@@ -13,6 +14,25 @@ export class PlayerPredictionService {
 
   async generatePlayerPredictions(): Promise<void> {
     const currentGameWeek = await this.fplDataService.getCurrentGameWeek();
+
+    // Check for unfinished fixtures in the current game week
+    const unfinishedFixtures = await this.prisma.fixtures.findMany({
+      where: {
+        gameweek: currentGameWeek,
+        finished: false,  // Ensure only unfinished matches are returned
+      },
+      include: {
+        homeTeam: true,
+        awayTeam: true,
+      },
+    });
+
+    // If all matches in the current game week are finished, proceed to the next game week
+    if (unfinishedFixtures.length > 0) {
+      console.log(`Still ${unfinishedFixtures.length} unfinished fixtures in the current game week ${currentGameWeek}.`);
+      return; // Exit the function if there are unfinished fixtures
+    }
+
 
     const players = await this.prisma.players.findMany({
       where: {
@@ -72,19 +92,88 @@ export class PlayerPredictionService {
       - Opponent Strength: ${opponentTeam.strengthOverall}
       - Fixture Difficulty: ${difficulty}
   
-      Please provide:
-      - Predicted FPL points for the next game
-      - Probability of scoring goals (in percentage)
-      - Probability of assisting (in percentage)
-      - Confidence level for this prediction (in percentage)`;
+      Please respond with the following information in a structured format:
+      - Predicted FPL Points: [predicted points in decimal]
+      - Goal Scoring Probability: [percentage probability]
+      - Assist Probability: [percentage probability]
+      - Prediction Confidence: [percentage confidence]
+      - Reasoning: [AI reasoning]`;
 
-      // Call Anthropic to get the prediction
-      const prediction = await this.anthropicAiService.generatePrediction(prompt);
+      try {
+        // Call Anthropic to get the prediction
+        const prediction = await this.anthropicAiService.generatePrediction(prompt);
 
-      // Log the prediction to the console for testing purposes
-      console.log(`Prediction for Player: ${player.name}`);
-      console.log(`Anthropic Response: ${prediction}`);
-      console.log('------------------------------------');
+        // Validate the response structure
+        const validatedResponse = validatePlayerPredictionResponse(prediction);
+
+        if (!validatedResponse) {
+          console.log(`Invalid response format for player ${player.name}.`);
+          continue;
+        }
+
+        // Upload validated data to the database
+        await this.prisma.playerPredictions.create({
+          data: {
+            playerId: player.id,
+            fixtureId: fixture.id,
+            predictedPoints: validatedResponse.predictedPoints,
+            predictedGoals: validatedResponse.predictedGoals,
+            predictedAssists: validatedResponse.predictedAssists,
+            predictionConfidence: validatedResponse.predictionConfidence,
+            aiReasoning: validatedResponse.reasoning,
+          },
+        });
+
+        console.log(`Prediction for Player: ${player.name} successfully stored in the database.`);
+        // Log the prediction to the console for testing purposes
+        console.log(`Prediction for Player: ${player.name}`);
+        console.log(`Anthropic Response: ${prediction}`);
+        console.log('------------------------------------');
+      } catch (error) {
+        console.error(`Error generating prediction for ${player.name}: ${error.message}`);
+      }
     }
+  }
+
+  async getPlayerPredictionsForGameWeek(): Promise<any[]> {
+    const currentGameWeek = await this.fplDataService.getCurrentGameWeek();
+
+    // Check if there are unfinished fixtures in the current game week
+    const unfinishedFixtures = await this.prisma.fixtures.findMany({
+      where: {
+        gameweek: currentGameWeek,
+        finished: false,
+      },
+    });
+
+    let gameWeekToShow = currentGameWeek;
+
+    // If all matches in the current game week are finished, move to the next game week
+    if (unfinishedFixtures.length === 0) {
+      gameWeekToShow = currentGameWeek + 1;
+    }
+
+    // Fetch player predictions for the determined game week
+    return await this.prisma.playerPredictions.findMany({
+      where: {
+        fixture: {
+          gameweek: gameWeekToShow,
+          finished: false,
+        },
+      },
+      include: {
+        player: {
+          include: {
+            team: true,
+          },
+        },
+        fixture: {
+          include: {
+            homeTeam: true,
+            awayTeam: true,
+          },
+        },
+      },
+    });
   }
 }

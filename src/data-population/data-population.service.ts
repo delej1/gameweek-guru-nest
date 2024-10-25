@@ -113,6 +113,7 @@ export class DataPopulationService {
         where: { fpl_id: fixture.id },
         update: {
           gameweek: fixture.event,
+          finished: fixture.finished,
           homeTeamId: fixture.team_h,
           awayTeamId: fixture.team_a,
           date: fixture.kickoff_time,
@@ -122,6 +123,7 @@ export class DataPopulationService {
         create: {
           fpl_id: fixture.id,
           gameweek: fixture.event,
+          finished: fixture.finished,
           homeTeamId: fixture.team_h,
           awayTeamId: fixture.team_a,
           date: fixture.kickoff_time,

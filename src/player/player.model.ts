@@ -12,6 +12,9 @@ export class Player {
   @Field()
   name: string;
 
+  @Field(() => Int)
+  code: number;
+
   @Field(() => Team)
   team: Team;
 
@@ -37,9 +40,24 @@ export class Player {
   cleanSheets: number;
 
   @Field(() => Float)
+  expectedGoals: number;
+
+  @Field(() => Float)
+  expectedAssists: number;
+
+  @Field(() => Float)
+  influence: number;
+
+  @Field(() => Float)
+  creativity: number;
+
+  @Field(() => Float)
+  threat: number;
+
+  @Field(() => Float)
   ictIndex: number;
 
-  @Field()
+  @Field(() => String)
   status: string;
 
   @Field(() => Int)

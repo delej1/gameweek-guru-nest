@@ -71,6 +71,7 @@ model Fixtures {
   id                Int                 @id @default(autoincrement()) // Primary Key
   fpl_id            Int                 @unique // Fixture ID from the FPL API
   gameweek          Int // Gameweek number
+  finished          Boolean // Fixture finished or not
   homeTeamId        Int // Foreign Key to Team (home)
   awayTeamId        Int // Foreign Key to Team (away)
   homeTeam          Teams               @relation("HomeTeam", fields: [homeTeamId], references: [id]) // Home team relation
@@ -84,9 +85,9 @@ model Fixtures {
 
 model PlayerPredictions {
   id                   Int      @id @default(autoincrement()) // Primary Key
-  playerId             Int      @unique // Foreign Key to Player
+  playerId             Int      // Foreign Key to Player
   player               Players  @relation(fields: [playerId], references: [id]) // Player relation
-  fixtureId            Int      @unique // Foreign Key to Fixture
+  fixtureId            Int      // Foreign Key to Fixture
   fixture              Fixtures @relation(fields: [fixtureId], references: [id]) // Fixture relation
   predictedPoints      Decimal  @db.Decimal(5, 2) // AI-predicted points for the player
   predictedGoals       Decimal  @db.Decimal(5, 2) // AI-predicted goals
