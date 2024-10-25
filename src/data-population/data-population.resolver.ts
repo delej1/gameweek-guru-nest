@@ -11,11 +11,11 @@ export class DataPopulationResolver {
     // Populate Teams first
     await this.dataPopulationService.populateTeams();
 
-    // Populate Players and trigger Player Predictions
-    await this.dataPopulationService.populatePlayers();
-
     // Populate Fixtures and trigger Match Predictions
     await this.dataPopulationService.populateFixtures();
+
+    // Populate Players and trigger Player Predictions
+    await this.dataPopulationService.populatePlayers();
 
     return true;
   }

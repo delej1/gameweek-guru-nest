@@ -33,6 +33,7 @@ model Players {
   id                       Int                 @id @default(autoincrement()) // Primary Key
   fpl_id                   Int                 @unique // Player ID from the FPL API
   name                     String              @db.VarChar(100) // Player's name
+  code                     Int // Code for player image
   teamId                   Int // Foreign Key to Team
   team                     Teams               @relation(fields: [teamId], references: [id]) // Team relation
   position                 Int // Player’s position (1 = GK, 2 = DEF)
@@ -57,6 +58,7 @@ model Teams {
   id              Int        @id @default(autoincrement()) // Primary Key
   fpl_id          Int        @unique // Team ID from the FPL API
   name            String     @db.VarChar(100) // Team name
+  code            Int // Code for team badge image
   strengthAttack  Int // Team attacking strength
   strengthDefense Int // Team defensive strength
   strengthOverall Int // Overall team strength

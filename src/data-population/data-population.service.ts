@@ -28,6 +28,7 @@ export class DataPopulationService {
         where: { fpl_id: team.id },
         update: {
           name: team.name,
+          code: team.code,
           strengthAttack: overallAttackStrength,
           strengthDefense: overallDefenseStrength,
           strengthOverall: overallTeamStrength,
@@ -35,6 +36,7 @@ export class DataPopulationService {
         create: {
           fpl_id: team.id,
           name: team.name,
+          code: team.code,
           strengthAttack: overallAttackStrength,
           strengthDefense: overallDefenseStrength,
           strengthOverall: overallTeamStrength,
@@ -53,6 +55,7 @@ export class DataPopulationService {
         where: { fpl_id: player.id },
         update: {
           name: player.web_name ?? "Unknown",
+          code: player.code ?? 0,
           position: player.element_type ?? 0,
           totalPoints: player.total_points ?? 0,
           form: player.form ?? 0.0,
@@ -60,11 +63,11 @@ export class DataPopulationService {
           assists: player.assists ?? 0,
           minutes: player.minutes ?? 0,
           cleanSheets: player.clean_sheets ?? 0,
-          expectedGoals: player.expected_goals,
-          expectedAssists: player.expected_assists,
-          influence: player.influence,
-          creativity: player.creativity,
-          threat: player.threat,
+          expectedGoals: player.expected_goals ?? 0.0,
+          expectedAssists: player.expected_assists ?? 0.0,
+          influence: player.influence ?? 0.0,
+          creativity: player.creativity ?? 0.0,
+          threat: player.threat ?? 0.0,
           ictIndex: player.ict_index ?? 0.0,
           status: player.status ?? "Unavailable",
           chanceOfPlayingNextRound: player.chance_of_playing_next_round ?? 0,
@@ -75,6 +78,7 @@ export class DataPopulationService {
         create: {
           fpl_id: player.id,
           name: player.web_name ?? "Unknown",
+          code: player.code ?? 0,
           position: player.element_type ?? 0,
           totalPoints: player.total_points ?? 0,
           form: player.form ?? 0.0,
