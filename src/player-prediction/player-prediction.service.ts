@@ -9,7 +9,7 @@ export class PlayerPredictionService {
     private readonly prisma: PrismaService,
     private readonly fplDataService: FplDataService,
     private readonly anthropicAiService: AnthropicAiService,
-  ) {}
+  ) { }
 
   async generatePlayerPredictions(): Promise<void> {
     const currentGameWeek = await this.fplDataService.getCurrentGameWeek();
@@ -52,7 +52,8 @@ export class PlayerPredictionService {
       }
 
       const opponentTeam = fixture.homeTeamId === player.teamId ? fixture.awayTeam : fixture.homeTeam;
-      const prompt = `Predict the PL performance of the following player in the next game:
+      const difficulty = fixture.homeTeamId === player.teamId ? fixture.difficultyAway : fixture.difficultyHome;
+      const prompt = `Predict the Premier League performance of the following player in the next game:
       - Name: ${player.name}
       - Position: ${player.position}
       - Form: ${player.form}
@@ -60,8 +61,17 @@ export class PlayerPredictionService {
       - Goals Scored: ${player.goalsScored}
       - Assists: ${player.assists}
       - Clean Sheets: ${player.cleanSheets}
+      - Expected Goals (xG): ${player.expectedGoals}
+      - Expected Assists (xA): ${player.expectedAssists}
+      - Influence: ${player.influence}
+      - Creativity: ${player.creativity}
+      - Threat: ${player.threat}
+      - ICT Index: ${player.ictIndex}
+      - Minutes Played: ${player.minutes}
       - Opponent: ${opponentTeam.name}
       - Opponent Strength: ${opponentTeam.strengthOverall}
+      - Fixture Difficulty: ${difficulty}
+  
       Please provide:
       - Predicted FPL points for the next game
       - Probability of scoring goals (in percentage)

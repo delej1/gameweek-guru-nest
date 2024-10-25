@@ -35,7 +35,10 @@ export class MatchPredictionService {
       Please provide the confidence in the following outcomes:
       - Home Win (%)
       - Away Win (%)
-      - Draw (%)`;
+      - Draw (%)
+      Also, predict how many goals will be scored by each team in this match:
+      - Predicted goals for Home Team
+      - Predicted goals for Away Team`;
 
       // Call Anthropic to get the prediction
       const prediction = await this.anthropicAiService.generatePrediction(prompt);

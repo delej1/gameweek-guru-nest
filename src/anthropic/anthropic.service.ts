@@ -20,10 +20,10 @@ export class AnthropicAiService {
       });
 
       return response.content
-      .filter((block: any) => block.type === 'text')
-      .map((block: any) => block.text)
-      .join(' ')
-      .trim();
+        .filter((block: any) => block.type === 'text')
+        .map((block: any) => block.text)
+        .join(' ')
+        .trim();
     } catch (error) {
       console.error('Error generating prediction:', error);
       throw error;

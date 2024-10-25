@@ -10,20 +10,20 @@ export class DataPopulationService {
     private readonly prisma: PrismaService,
     private readonly fplDataService: FplDataService,
     private readonly playerPredictionService: PlayerPredictionService,
-    private readonly matchPredictionService: MatchPredictionService, 
-  ) {}
+    private readonly matchPredictionService: MatchPredictionService,
+  ) { }
 
   async populateTeams(): Promise<void> {
     const data = await this.fplDataService.fetchBootstrapData();
     const teams = data.teams;
-  
+
     // Process and insert teams into the database
     for (const team of teams) {
       // Calculate overall strengths
       const overallAttackStrength = (team.strength_attack_home + team.strength_attack_away) / 2;
       const overallDefenseStrength = (team.strength_defence_home + team.strength_defence_away) / 2;
       const overallTeamStrength = (team.strength_overall_home + team.strength_overall_away) / 2;
-  
+
       await this.prisma.teams.upsert({
         where: { fpl_id: team.id },
         update: {
@@ -60,6 +60,11 @@ export class DataPopulationService {
           assists: player.assists ?? 0,
           minutes: player.minutes ?? 0,
           cleanSheets: player.clean_sheets ?? 0,
+          expectedGoals: player.expected_goals,
+          expectedAssists: player.expected_assists,
+          influence: player.influence,
+          creativity: player.creativity,
+          threat: player.threat,
           ictIndex: player.ict_index ?? 0.0,
           status: player.status ?? "Unavailable",
           chanceOfPlayingNextRound: player.chance_of_playing_next_round ?? 0,
@@ -68,21 +73,26 @@ export class DataPopulationService {
           },
         },
         create: {
-            fpl_id: player.id,
-            name: player.web_name ?? "Unknown",
-            position: player.element_type ?? 0,
-            totalPoints: player.total_points ?? 0,
-            form: player.form ?? 0.0,
-            goalsScored: player.goals_scored ?? 0,
-            assists: player.assists ?? 0,
-            minutes: player.minutes ?? 0,
-            cleanSheets: player.clean_sheets ?? 0,
-            ictIndex: player.ict_index ?? 0.0,
-            status: player.status ?? "Unavailable",
-            chanceOfPlayingNextRound: player.chance_of_playing_next_round ?? 0,
-            team: {
-              connect: { id: player.team }
-            },
+          fpl_id: player.id,
+          name: player.web_name ?? "Unknown",
+          position: player.element_type ?? 0,
+          totalPoints: player.total_points ?? 0,
+          form: player.form ?? 0.0,
+          goalsScored: player.goals_scored ?? 0,
+          assists: player.assists ?? 0,
+          minutes: player.minutes ?? 0,
+          cleanSheets: player.clean_sheets ?? 0,
+          expectedGoals: player.expected_goals ?? 0.0,
+          expectedAssists: player.expected_assists ?? 0.0,
+          influence: player.influence ?? 0.0,
+          creativity: player.creativity ?? 0.0,
+          threat: player.threat ?? 0.0,
+          ictIndex: player.ict_index ?? 0.0,
+          status: player.status ?? "Unavailable",
+          chanceOfPlayingNextRound: player.chance_of_playing_next_round ?? 0,
+          team: {
+            connect: { id: player.team }
+          },
         },
       });
     }
@@ -98,21 +108,21 @@ export class DataPopulationService {
       await this.prisma.fixtures.upsert({
         where: { fpl_id: fixture.id },
         update: {
-            gameweek: fixture.event,
-            homeTeamId: fixture.team_h,
-            awayTeamId: fixture.team_a,
-            date: fixture.kickoff_time,
-            difficultyHome: fixture.team_h_difficulty,
-            difficultyAway: fixture.team_a_difficulty,
+          gameweek: fixture.event,
+          homeTeamId: fixture.team_h,
+          awayTeamId: fixture.team_a,
+          date: fixture.kickoff_time,
+          difficultyHome: fixture.team_h_difficulty,
+          difficultyAway: fixture.team_a_difficulty,
         },
         create: {
-            fpl_id: fixture.id,
-            gameweek: fixture.event,
-            homeTeamId: fixture.team_h,
-            awayTeamId: fixture.team_a,
-            date: fixture.kickoff_time,
-            difficultyHome: fixture.team_h_difficulty,
-            difficultyAway: fixture.team_a_difficulty,
+          fpl_id: fixture.id,
+          gameweek: fixture.event,
+          homeTeamId: fixture.team_h,
+          awayTeamId: fixture.team_a,
+          date: fixture.kickoff_time,
+          difficultyHome: fixture.team_h_difficulty,
+          difficultyAway: fixture.team_a_difficulty,
         },
       });
     }

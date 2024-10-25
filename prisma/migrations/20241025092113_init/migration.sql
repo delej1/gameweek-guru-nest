@@ -37,6 +37,11 @@ CREATE TABLE "Players" (
     "goalsScored" INTEGER NOT NULL,
     "assists" INTEGER NOT NULL,
     "cleanSheets" INTEGER NOT NULL,
+    "expectedGoals" DECIMAL(5,2) NOT NULL,
+    "expectedAssists" DECIMAL(5,2) NOT NULL,
+    "influence" DECIMAL(5,2) NOT NULL,
+    "creativity" DECIMAL(5,2) NOT NULL,
+    "threat" DECIMAL(5,2) NOT NULL,
     "ictIndex" DECIMAL(5,2) NOT NULL,
     "status" VARCHAR(50) NOT NULL,
     "chanceOfPlayingNextRound" INTEGER NOT NULL,
@@ -79,6 +84,7 @@ CREATE TABLE "PlayerPredictions" (
     "predictedGoals" DECIMAL(5,2) NOT NULL,
     "predictedAssists" DECIMAL(5,2) NOT NULL,
     "predictionConfidence" DECIMAL(5,2) NOT NULL,
+    "aiReasoning" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "PlayerPredictions_pkey" PRIMARY KEY ("id")
@@ -88,10 +94,12 @@ CREATE TABLE "PlayerPredictions" (
 CREATE TABLE "MatchPredictions" (
     "id" SERIAL NOT NULL,
     "fixtureId" INTEGER NOT NULL,
-    "predictedResult" VARCHAR(10) NOT NULL,
     "confidenceHomeWin" DECIMAL(5,2) NOT NULL,
     "confidenceAwayWin" DECIMAL(5,2) NOT NULL,
     "confidenceDraw" DECIMAL(5,2) NOT NULL,
+    "predictedHomeGoals" DECIMAL(5,2) NOT NULL,
+    "predictedAwayGoals" DECIMAL(5,2) NOT NULL,
+    "aiReasoning" TEXT NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "MatchPredictions_pkey" PRIMARY KEY ("id")
