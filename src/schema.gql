@@ -24,4 +24,5 @@ type Query {
 
 type Mutation {
   createUser(email: String!, username: String!, password: String!, phoneNumber: String!): User!
+  populateAllData: Boolean!
 }

@@ -1,7 +1,5 @@
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloServer } from '@apollo/server';
-import { expressMiddleware } from '@apollo/server/express4';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { PrismaService } from './prisma/prisma.service';
 import { join } from 'path';
@@ -12,6 +10,9 @@ import { TeamModule } from './team/team.module';
 import { FixtureModule } from './fixture/fixture.module';
 import { PlayerPredictionModule } from './player-prediction/player-prediction.module';
 import { MatchPredictionModule } from './match-prediction/match-prediction.module';
+import { FplModule } from './fpl/fpl.module';
+import { DataPopulationModule } from './data-population/data-population.module';
+import { AnthropicModule } from './anthropic/anthropic.module';
 
 
 @Module({
@@ -27,6 +28,9 @@ import { MatchPredictionModule } from './match-prediction/match-prediction.modul
     FixtureModule,
     PlayerPredictionModule,
     MatchPredictionModule,
+    FplModule,
+    DataPopulationModule,
+    AnthropicModule,
   ],
   providers: [PrismaService],
 })
