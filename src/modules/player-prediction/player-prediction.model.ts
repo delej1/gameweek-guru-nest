@@ -1,6 +1,6 @@
 import { ObjectType, Field, Int, Float } from '@nestjs/graphql';
 import { Player } from '../player/player.model';
-import { Fixture } from '../../fixture/fixture.model';
+import { Fixture } from '../fixture/fixture.model';
 
 @ObjectType()
 export class PlayerPrediction {
