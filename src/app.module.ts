@@ -7,12 +7,12 @@ import { join } from 'path';
 import { UserModule } from './user/user.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { PlayerModule } from './player/player.module';
-import { TeamModule } from './team/team.module';
+import { TeamModule } from './modules/team/team.module';
 import { FixtureModule } from './fixture/fixture.module';
-import { PlayerPredictionModule } from './player-prediction/player-prediction.module';
+import { PlayerPredictionModule } from './modules/player-prediction/player-prediction.module';
 import { MatchPredictionModule } from './match-prediction/match-prediction.module';
-import { FplModule } from './fpl/fpl.module';
-import { DataPopulationModule } from './data-population/data-population.module';
+import { FplModule } from './modules/fpl/fpl.module';
+import { DataPopulationModule } from './modules/data-population/data-population.module';
 import { AnthropicModule } from './anthropic/anthropic.module';
 import { PredictionCronService } from './cron/prediction-cron.service';
 

@@ -1,8 +1,8 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { PrismaService } from '../prisma/prisma.service';
-import { DataPopulationService } from '../data-population/data-population.service';
-import { FplDataService } from '../fpl/fpl.service';
+import { DataPopulationService } from '../modules/data-population/data-population.service';
+import { FplDataService } from '../modules/fpl/fpl.service';
 
 @Injectable()
 export class PredictionCronService {

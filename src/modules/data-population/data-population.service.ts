@@ -48,7 +48,7 @@ type Fixture = {
 };
 
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 import { FplDataService } from '../fpl/fpl.service';
 import { PlayerPredictionService } from '../player-prediction/player-prediction.service';
 import { MatchPredictionService } from '../match-prediction/match-prediction.service';

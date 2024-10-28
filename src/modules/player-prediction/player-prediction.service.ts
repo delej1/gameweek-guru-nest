@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { AnthropicAiService } from '../anthropic/anthropic.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { AnthropicAiService } from '../../anthropic/anthropic.service';
 import { FplDataService } from '../fpl/fpl.service';
-import { validatePlayerPredictionResponse } from '../helpers/prediction-validation';
+import { validatePlayerPredictionResponse } from '../../helpers/prediction-validation';
 
 @Injectable()
 export class PlayerPredictionService {
@@ -37,8 +37,7 @@ export class PlayerPredictionService {
     const players = await this.prisma.players.findMany({
       where: {
         status: "a",  // Available players
-        chanceOfPlayingNextRound: { gte: 75 },  // Percentage
-        form: { gte: 3.0 },
+        form: { gte: 5.0 },
         ictIndex: { gte: 50 },
       },
       include: { team: true },

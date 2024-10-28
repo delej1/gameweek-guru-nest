@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
-import { AnthropicAiService } from '../anthropic/anthropic.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { AnthropicAiService } from '../../anthropic/anthropic.service';
 import { FplDataService } from '../fpl/fpl.service';
-import { validateMatchPredictionResponse } from '../helpers/prediction-validation';
+import { validateMatchPredictionResponse } from '../../helpers/prediction-validation';
 
 @Injectable()
 export class MatchPredictionService {
