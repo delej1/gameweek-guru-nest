@@ -103,7 +103,7 @@ export class MatchPredictionService {
   }
 
   // Fetch predictions for the relevant game week
-  async getPredictionsForGameWeek(): Promise<any[]> {
+  async getMatchPredictionsForGameWeek(): Promise<any[]> {
     const currentGameWeek = await this.fplDataService.getCurrentGameWeek();
 
     // Check if there are unfinished fixtures in the current game week

@@ -8,6 +8,6 @@ export class MatchPredictionResolver {
 
   @Query(() => [MatchPrediction])
   async getMatchPredictionsForCurrentGameWeek() {
-    return this.matchPredictionService.getPredictionsForGameWeek();
+    return this.matchPredictionService.getMatchPredictionsForGameWeek();
   }
 }
